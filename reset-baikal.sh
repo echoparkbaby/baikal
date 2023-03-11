@@ -23,7 +23,12 @@ sudo mkdir /var/lib/baikal-data/config
 sudo mkdir /var/lib/baikal-data/data 
 sudo mkdir /var/lib/baikal-data/data/db
 sudo mkdir /var/lib/baikal
+
+#chown for apache
 sudo chown -R 33:33 /var/lib/baikal
+
+#chown for nginx
+# sudo chown -R 101:101 /var/lib/baikal
 
 exit 0
 
