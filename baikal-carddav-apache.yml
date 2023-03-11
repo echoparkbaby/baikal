@@ -1,0 +1,46 @@
+#NOTE: this works. Must make sure to create folders and chown them
+# sudo mkdir /var/lib/baikal-data/config
+# sudo mkdir /var/lib/baikal-data/data 
+# sudo mkdir /var/lib/baikal-data/data/db
+# sudo chown -R 33:33 /var/lib/baikal
+
+#It's running SQLite and not sure about how many contacts it can handle. Best to figure out MySQL
+
+version: '2'
+services:
+  Adminer:
+    container_name: adminer
+    image: adminer
+    # https://hub.docker.com/_/adminer/
+    ports:
+      - "3308:8080"
+    networks:
+      - default
+    restart: on-failure
+
+  baikal:
+    restart: always
+    image: ckulka/baikal:0.9.3-apache
+    container_name: baikal
+    volumes:
+      - /var/lib/baikal-data/config:/var/www/baikal/config
+      - /var/lib/baikal-data/data:/var/www/baikal/Specific
+    links:
+      - baikal-db
+    ports:
+      - "8083:80"
+      - "4533:443"
+
+  baikal-db:
+    restart: always
+    image: mariadb
+    container_name: baikal-db
+    ports:
+      - "3306:3306"
+    volumes:
+      - "/var/lib/baikal-data/data:/var/lib/mysql"
+    environment:
+       MYSQL_ROOT_PASSWORD: test
+       MYSQL_DATABASE: test
+       MYSQL_USER: test
+       MYSQL_PASSWORD: test
